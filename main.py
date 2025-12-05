@@ -8,7 +8,7 @@ class User(BaseModel):
     institute: str
     adm: bool
 
-banco : list[User] = []
+banco : List[User] = []
 
 app = FastAPI()
 
