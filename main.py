@@ -25,9 +25,9 @@ def create(user : User):
     return {'mensage' : 'Created with sucess'}
 
 @app.delete('/')
-def delete(user : User):
+def delete(email : str):
     for a in banco:
-        if a == user:
+        if a.email == email:
             banco.remove(a)
             return {'mensage' : 'Deleted with sucess'}
     return {'mensage' : 'Error User doesnt exist'}
