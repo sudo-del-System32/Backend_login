@@ -13,12 +13,20 @@ banco : List[User] = []
 app = FastAPI()
 
 
-@app.get('/')
+@app.get('/users')
 def read():
     return banco
 
 
-@app.post('/')
+@app.get('/users/{email}')
+def read(email : str):
+    for user in banco:
+        if user.email == email:
+            return user
+    return {'mensage' : 'Error User doesnt exist'}
+
+
+@app.post('/users')
 def create(userQuerry : User):
     for user in banco:
         if user.email == userQuerry.email:
@@ -27,8 +35,17 @@ def create(userQuerry : User):
     return {'mensage' : 'Created with sucess'}
 
 
-@app.delete('/')
-def delete(email : Optional[str] = None):
+@app.put('/users/{email}')
+def read(email: str, newUserInfo: User):
+    for user in banco:
+        if user.email == email:
+            banco[banco.index(user)] = newUserInfo
+            return {'mensage' : 'User info updated'}
+    return {'mensage' : 'Error User doesnt exist'}
+
+
+@app.delete('/users/{email}')
+def delete(email : str):
     for user in banco:
         if user.email == email:
             banco.remove(user)
