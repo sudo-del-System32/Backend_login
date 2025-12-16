@@ -1,40 +1,44 @@
 from fastapi import FastAPI
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 class User(BaseModel):
     name : str
     email: str
     institute: str
-    adm: bool
+    adm: Optional[bool] = False
 
 banco : List[User] = []
 
 app = FastAPI()
 
+
 @app.get('/')
 def read():
     return banco
 
+
 @app.post('/')
-def create(user : User):
-    for a in banco:
-        if a.email == user.email:
+def create(userQuerry : User):
+    for user in banco:
+        if user.email == userQuerry.email:
             return {'mensage' : 'Error Email already in use'}
-    banco.append(user)
+    banco.append(userQuerry)
     return {'mensage' : 'Created with sucess'}
 
+
 @app.delete('/')
-def delete(email : str):
-    for a in banco:
-        if a.email == email:
-            banco.remove(a)
+def delete(email : Optional[str] = None):
+    for user in banco:
+        if user.email == email:
+            banco.remove(user)
             return {'mensage' : 'Deleted with sucess'}
     return {'mensage' : 'Error User doesnt exist'}
 
+
 @app.get('/login')
-def login(user : User):
-    for a in banco:
-        if a == user:
+def login(userQuerry : User):
+    for user in banco:
+        if user == userQuerry:
             return True
     return False
