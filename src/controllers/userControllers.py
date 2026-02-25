@@ -1,30 +1,30 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, Request
 from src.classes import User, DataBank
-
+from src.schemas.userSchema import UserSchema
 
 bd = DataBank("databases/dataBank.db")
 
-app = FastAPI()
-
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/user") 
 
 
-@app.get("/")
-def read_all_users():
+@router.get("/")
+async def read_all_users(request: Request):
+    # djeizu: dict = await request.json() # await utiliza junto de async function
+    # if djeizu.get("email") is None:
     return bd.user_list()
 
 
-@app.get("/{id}")
+@router.get("/{id}")
 def read_user(id):
     return bd.search("id", id)
 
 
-@app.get("/search")
+@router.get("/search")
 def read_user(campo: str, dado):
     return bd.search(campo, dado)
 
 
-@app.post("/")
+@router.post("/")
 def add_user(user: User):
     try:
         bd.add_user(user)
@@ -34,7 +34,7 @@ def add_user(user: User):
         return {"mensagem": f"Erro no cadastro: {e}"}
 
 
-@app.delete("/")
+@router.delete("/")
 def delete_user(id: int):
     try:
         bd.delete(id)

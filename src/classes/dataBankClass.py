@@ -31,7 +31,8 @@ class DataBank:
                                 
                         nomeDeUsuario TEXT UNIQUE,
                         email TEXT UNIQUE,
-                        senha TEXT
+                        senha TEXT,
+                        created_at TEXT
                 )
             """)
 
