@@ -3,15 +3,9 @@ from typing import Optional
 
 
 class User(BaseModel):
-    id: int
-    nome: str
-    idade: int
-
-    nomeDeUsuario: str
-    email: str
-    senha: str
-    
-    admin : bool
-    createdBy: str
-
+    user_id: int
+    user_name: str
+    user_email: str
+    password: str
+    card_id: int
 
