@@ -8,13 +8,6 @@ class User(BaseModel):
     email: str
     password: str
     card_id: Optional[int]
-
-    #verificar essa verificaçao com o pedro
-    # @model_validator(mode="after")
-    # def check_id(self):
-    #     if self.id < 1:
-    #         raise ValueError("Card id can not be less than 1")
-    #     return self
     
     @model_validator(mode="after")
     def check_name(self):

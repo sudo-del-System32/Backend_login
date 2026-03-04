@@ -2,10 +2,10 @@ import os, uvicorn
 from fastapi import FastAPI
 from src.controllers import userControllers, cardControllers
 
-app = FastAPI()
+app = FastAPI(title= "Api card social midia test")
 
 @app.get('/')
-def root():
+async def root():
     return {'mensagem' : 'API TEST OK'}
 
 
