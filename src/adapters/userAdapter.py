@@ -1,5 +1,5 @@
 from src.models.userModel import User
-from src.schemas.userSchema import UserSchema
+from src.schemas.userSchema import UserSchema, UserEditSchema
 from src.services.userService import UserService
 
 class UserAdapter:
@@ -29,7 +29,7 @@ class UserAdapter:
         UserService().add_user(new_user=newUser)
         return {"Mensagem" : "User Added Sucessfull"}
 
-    def update_user_controller(self, id: int, user_to_update: UserSchema):
+    def update_user_controller(self, id: int, user_to_update: UserEditSchema):
         return UserService().update_user(id, user_to_update)
 
     def kill_yourself_controller(self, id: int):

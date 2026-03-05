@@ -41,7 +41,7 @@ class UserEditSchema(BaseModel):
     
     @model_validator(mode="after")
     def check_email(self):
-        if not self.name:
+        if not self.email:
             return self
 
         if len(self.email) < 1:
@@ -50,7 +50,7 @@ class UserEditSchema(BaseModel):
     
     @model_validator(mode="after")
     def check_password(self):
-        if not self.name:
+        if not self.password:
             return self
 
         if len(self.password) < 4:

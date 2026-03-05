@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from src.schemas.userSchema import UserSchema
+from src.schemas.userSchema import UserSchema, UserEditSchema
 from src.adapters.userAdapter import UserAdapter
 
 router = APIRouter(prefix="/user") 
@@ -28,7 +28,7 @@ async def add_user(schema: UserSchema):
     return UserAdapter().add_user_controller(schema)
 
 @router.put("/")
-async def update_user(id: int, user_to_update: UserSchema):
+async def update_user(id: int, user_to_update: UserEditSchema):
     return UserAdapter().update_user_controller(id=id, user_to_update=user_to_update)
 
 
