@@ -24,7 +24,7 @@ class SuperService():
                     LIMIT ?
                     OFFSET ?
                 """,
-                (rows_per_page*page, rows_per_page*(1-page))
+                (rows_per_page, rows_per_page*(page-1))
             )
     
             return cursor.fetchall()
@@ -48,7 +48,7 @@ class SuperService():
                     LIMIT ?
                     OFFSET ?
                 """,
-                (rows_per_page*page, rows_per_page*(1-page))
+                (rows_per_page, rows_per_page*(page-1))
             )
     
             return cursor.fetchall()
