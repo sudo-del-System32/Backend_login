@@ -1,7 +1,7 @@
 # Backend_login
 
-*Using uvicorn use the command: uvicorn main:app --reload
+*Using uvicorn use the command: python3 main.py
 
-In case of use of *UV* use: uv run uvicorn main:app --reload
+In case of use of *UV* use: uv run main.py
 
 and integrate to your frontend code :)
