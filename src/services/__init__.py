@@ -108,8 +108,42 @@ def pagination_like(
 
 class SuperService():
 
+    def __init__(self, connection: sql.Connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+
+    def add(self,
+            table: str, 
+            item_to_add: dict[str, any]
+        ):
+
+        key_placement: str = " "
+        value_placement: str = " "
+        for item in item_to_add.keys():
+            key_placement = key_placement + str(item) + "," 
+            value_placement = value_placement + "?" + ","
+
+        # WHAT AM I DOING
+        key_placement = key_placement[:-1]
+        value_placement = value_placement[:-1]
+        
+        try:
+            self.cursor.execute(f"""
+                    INSERT INTO users
+                    ({key_placement})
+                    VALUES
+                    ({value_placement})
+                """,
+                tuple(item_to_add.values())
+            )
+            self.connection.commit()
+            
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+        return True
+
     def find(self, 
-            connection: sql.Connection,
             table: str, 
             query: str = "WHERE TRUE", 
             page: int = 1,
@@ -118,7 +152,7 @@ class SuperService():
 
         try:
 
-            cursor = connection.execute(f"""
+            cursor = self.connection.execute(f"""
                     SELECT *
                     FROM {table}
                     {query}
@@ -128,13 +162,12 @@ class SuperService():
                 (rows_per_page, rows_per_page*(page-1))
             )
     
-            return cursor.fetchall()
-
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+        return cursor.fetchall()
+
     def find_like(self, 
-            connection: sql.Connection, 
             table: str, 
             column: str,
             target: str, 
@@ -143,7 +176,7 @@ class SuperService():
         ):
 
         try:
-            cursor = connection.execute(f"""
+            cursor = self.connection.execute(f"""
                     SELECT * 
                     FROM {table}
                     WHERE {column} LIKE '%{target}%'
@@ -158,8 +191,56 @@ class SuperService():
                 (rows_per_page, rows_per_page*(page-1))
             )
     
-            return cursor.fetchall()
-        
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+        return cursor.fetchall()
     
+    def edit(self,
+            table: str,
+            query: str,
+            item_to_update: dict[str, any]
+        ):
+        
+        update_query: str = " "
+        for item in item_to_update.items():
+            if item[1]:
+                update_query += item[0] + " = " + "\'" + str(item[1]) + "\'" + ","
+
+        update_query = update_query[:-1]
+
+        try:
+            self.cursor.execute(f"""
+                UPDATE {table}
+                SET 
+                {update_query}
+                {query}
+            """ 
+            )
+    
+            self.connection.commit()
+
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+        return True
+    
+    def delete(self,
+            table: str,
+            query: str,
+        ):
+
+        try:
+            self.cursor.execute(f"""
+                DELETE 
+                FROM {table}
+                {query}    
+                """
+            )
+
+            self.connection.commit()
+
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+        return True
