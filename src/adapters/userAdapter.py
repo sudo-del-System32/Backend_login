@@ -10,15 +10,15 @@ class UserAdapter:
         return {"error": False, "data": users}
 
     def read_user_by_id_controller(self, request: Request):
-        user = UserService().read_user_by_id(request.query_params)
+        user = UserService().read_user_by_id(request.path_params)
         return {"error": False, "data": user}
 
     def read_user_by_email_controller(self, request: Request):
-        users = UserService().read_user_by_email(request.query_params)
+        users = UserService().read_user_by_email(request.path_params, request.query_params)
         return {"error": False, "data": users}
 
     def read_user_by_name_controller(self, request: Request):
-        users = UserService().read_user_by_name(request.query_params)
+        users = UserService().read_user_by_name(request.path_params, request.query_params)
         return {"error": False, "data": users}
 
     def add_user_controller(self, schema: UserSchema):

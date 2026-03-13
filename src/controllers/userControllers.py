@@ -11,15 +11,15 @@ async def read_all_users(request: Request, page: int=1, rows_per_page: int=10):
     # if djeizu.get("email") is None:
     return UserAdapter().read_all_users_controller(request=request)
 
-@router.get("/search/id/{id}")
+@router.get("/{user_id}")
 async def read_user_by_id(request: Request, user_id: int):
     return UserAdapter().read_user_by_id_controller(request=request)
 
-@router.get("/search/email/{email}")
+@router.get("/search/email/{user_email}")
 async def read_user_by_email(request: Request, user_email: str, page: int=1, rows_per_page: int=10):
     return UserAdapter().read_user_by_email_controller(request=request)
 
-@router.get("/search/name/{name}")
+@router.get("/search/name/{user_name}")
 async def read_user_by_name(request: Request, user_name: str, page: int=1, rows_per_page: int=10):
     return UserAdapter().read_user_by_name_controller(request=request)
 

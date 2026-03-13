@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from typing import Any
 from fastapi import HTTPException, status
 from math import ceil
 
@@ -34,7 +35,7 @@ def pagination(
         next = None if pages_count - page < 1 else page + 1
         prev = None if page - 1 < 1 else page - 1
 
-        if not next and prev and page < pages_count:
+        if not next and prev and page > pages_count:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="page not found")
 
     except Exception as e:
@@ -114,7 +115,7 @@ class SuperService():
 
     def add(self,
             table: str, 
-            item_to_add: dict[str, any]
+            item_to_add: dict[str, Any]
         ):
 
         key_placement: str = " "
@@ -144,16 +145,17 @@ class SuperService():
         return True
 
     def find(self, 
+            column_query: str,
             table: str, 
             query: str = "WHERE TRUE", 
             page: int = 1,
             rows_per_page: int = 1
-        ):
+        ) -> list[tuple[Any]]:
 
         try:
 
             cursor = self.connection.execute(f"""
-                    SELECT *
+                    SELECT {column_query}
                     FROM {table}
                     {query}
                     LIMIT ?
@@ -168,27 +170,31 @@ class SuperService():
         return cursor.fetchall()
 
     def find_like(self, 
+            column_query: str,
             table: str, 
             column: str,
             target: str, 
             page: int = 1,
             rows_per_page: int = 1
         ):
+        target = '%' + target + '%'
 
+        # Verify the query for slq injection with pedro
+        
         try:
             cursor = self.connection.execute(f"""
-                    SELECT * 
+                    SELECT {column_query}
                     FROM {table}
-                    WHERE {column} LIKE '%{target}%'
+                    WHERE {column} LIKE ?
                     ORDER BY CASE
-                        WHEN {column} LIKE '{target}%' THEN 1
-                        WHEN {column} LIKE '%{target}%' THEN 2
+                        WHEN {column} LIKE ? THEN 1
+                        WHEN {column} LIKE ? THEN 2
                         ELSE 3
                     END
                     LIMIT ?
                     OFFSET ?
                 """,
-                (rows_per_page, rows_per_page*(page-1))
+                (target, target, target, rows_per_page, rows_per_page*(page-1))
             )
     
         except Exception as e:
@@ -199,7 +205,7 @@ class SuperService():
     def edit(self,
             table: str,
             query: str,
-            item_to_update: dict[str, any]
+            item_to_update: dict[str, Any]
         ):
         
         update_query: str = " "

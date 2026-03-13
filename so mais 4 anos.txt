@@ -5,6 +5,7 @@ paginação (rows_per_page + page) - offset pagination | ok
 autenticação com jwt | starting
 autorização com pedro
 envio de email para verificar usuario
+filtro no all
 
 
 
