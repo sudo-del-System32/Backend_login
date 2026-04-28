@@ -22,7 +22,7 @@ async def read_user_by_email(curr_user: user_dependency, email: str, request: Re
 async def read_user_by_name(curr_user: user_dependency, name: str, request: Request, page: int=1, rows_per_page: int=10):
     return UserAdapter().get_user_by_name_controller(name, request)
 
-@router.post("/register")
+@router.post("/")
 async def add_user(schema: UserAddSchema):
     return UserAdapter().add_user_controller(schema)
 
