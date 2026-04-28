@@ -22,9 +22,9 @@ class UserAdapter:
         
         return output
 
-    def get_user_by_id_controller(self, user_id: int):
+    def get_user_by_id_controller(self, id: int):
 
-        user = UserService().get_user_by_id(user_id)
+        user = UserService().get_user_by_id(id)
         
         if user is None: 
             raise HTTPException(
@@ -93,9 +93,9 @@ class UserAdapter:
                 "error": False
             }
 
-    def update_user_controller(self, curr_user: user_dependency, user_id: int, user_to_update: UserEditSchema):
+    def update_user_controller(self, curr_user: user_dependency, id: int, user_to_update: UserEditSchema):
         
-        if curr_user.get("id") != user_id:
+        if curr_user.get("id") != id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User can't do this action for another user."
@@ -105,7 +105,7 @@ class UserAdapter:
         if user_to_update.email is not None:
             user_found = UserService().get_user_by_email(user_to_update.email) 
 
-            if user_found is not None and user_found.get("id") != user_id: 
+            if user_found is not None and user_found.get("id") != id: 
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST, 
                     detail="Email is already in use."
@@ -114,7 +114,7 @@ class UserAdapter:
         if user_to_update.password is not None:
             user_to_update.password = bcrypt_that_works.hash(secret=user_to_update.password, salt=SALT_HASH_PASSWORD)
 
-        user_dict = UserService().update_user(user_id, user_to_update)
+        user_dict = UserService().update_user(id, user_to_update)
         
         return {
                 "message" : "user edited sucessfully",
@@ -122,15 +122,15 @@ class UserAdapter:
                 "error": False
             }
 
-    def kill_yourself_controller(self, curr_user: user_dependency, user_id: int):
+    def kill_yourself_controller(self, curr_user: user_dependency, id: int):
         
-        if curr_user.get("id") != user_id:
+        if curr_user.get("id") != id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User can't do this action for another user."
             )
 
-        user_dict = UserService().kill_yourself(user_id) 
+        user_dict = UserService().kill_yourself(id) 
         return {
                 "message" : "user deleted sucessfully", 
                 "data": user_dict,

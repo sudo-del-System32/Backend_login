@@ -27,10 +27,10 @@ class UserService:
 
     def get_user_by_id(
             self, 
-            user_id: int
+            id: int
         ) -> dict[str, Any] | None:
 
-        user = SuperService().get_by_id(user_id, User)
+        user = SuperService().get_by_id(id, User)
         
         if user is None:
             return None
@@ -127,11 +127,11 @@ class UserService:
 
     def update_user(
             self, 
-            user_id: int, 
+            id: int, 
             user_to_update: UserEditSchema
         ) -> dict[str, Any]:
 
-        user = SuperService().edit_by_id(user_id, User, user_to_update)
+        user = SuperService().edit_by_id(id, User, user_to_update)
         
         if user is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
@@ -140,10 +140,10 @@ class UserService:
 
     def kill_yourself(
             self, 
-            user_id: int
+            id: int
         ) -> dict[str, Any]:
 
-        user = SuperService().delete_by_id(user_id, User)
+        user = SuperService().delete_by_id(id, User)
         
         if user is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
