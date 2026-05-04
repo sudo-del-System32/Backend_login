@@ -1,0 +1,15 @@
+# virtual environments
+.venv
+
+# python files
+__pycache__/
+
+# data files
+databankfiller.py
+test.py
+
+# VS code
+.vscode
+
+# Texts
+so mais 4 anos.txt
