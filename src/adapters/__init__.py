@@ -30,6 +30,7 @@ def get_pagination(
         'current': page
     }
     return {
-        "items": items,
-        'pagination': pagination
+        'items': items,
+        'pagination': pagination,
+        'error': True
     }

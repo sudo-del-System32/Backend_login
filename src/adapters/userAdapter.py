@@ -18,8 +18,6 @@ class UserAdapter:
 
         output = get_pagination(users, total)
     
-        output.update({'error': True}) # put in pagination later
-        
         return output
 
     def get_user_by_id_controller(self, id: int):
@@ -49,8 +47,6 @@ class UserAdapter:
     
         output = get_pagination(users, total)
     
-        output.update({'error': True}) # put in pagination later
-        
         return output
 
     def get_user_by_name_controller(self, name: str, request: Request):
@@ -63,8 +59,6 @@ class UserAdapter:
 
         output = get_pagination(users, total)
     
-        output.update({'error': True}) # put in pagination later
-        
         return output
 
     def add_user_controller(self, schema: UserAddSchema):
@@ -78,7 +72,6 @@ class UserAdapter:
                 detail="Email is already in use."
             )
 
-        # Verify if its converted in adapter or in service
         newUser = User(
             name=schema.name, 
             email=schema.email, 
@@ -86,7 +79,13 @@ class UserAdapter:
         )
 
         new_user_dict = UserService().add_user(newUser)
-        
+
+        if new_user_dict is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="New user was not subscribed, try again later."
+            )
+
         return {
                 "message": "user added sucessfully",
                 "data": new_user_dict,
@@ -116,6 +115,12 @@ class UserAdapter:
 
         user_dict = UserService().update_user(id, user_to_update)
         
+        if user_dict is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="User not found."
+            )
+
         return {
                 "message": "user edited sucessfully",
                 "data": user_dict,
@@ -131,6 +136,13 @@ class UserAdapter:
             )
 
         user_dict = UserService().kill_yourself(id) 
+
+        if user_dict is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="User not found."
+            )
+
         return {
                 "message": "user deleted sucessfully", 
                 "data": user_dict,

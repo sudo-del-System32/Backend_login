@@ -10,9 +10,9 @@ from sqlalchemy import Select, select, Insert, func, case
 class UserService:
 
     def get_all_users(
-            self, 
-            query_params: QueryParams
-        ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
+        self, 
+        query_params: QueryParams
+    ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
 
         stmt = select(User)
         users, total = SuperService().get_all_with_pagination(
@@ -26,9 +26,9 @@ class UserService:
         return user_list, total
 
     def get_user_by_id(
-            self, 
-            id: int
-        ) -> dict[str, Any] | None:
+        self, 
+        id: int
+    ) -> dict[str, Any] | None:
 
         user = SuperService().get_by_id(id, User)
         
@@ -38,10 +38,10 @@ class UserService:
         return user.to_dict()
 
     def get_user_by_similarity_to_email(
-            self,
-            email: str,
-            query_params: QueryParams
-        ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
+        self,
+        email: str,
+        query_params: QueryParams
+    ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
 
         # Ordenação de acordo com similaridade
         email_1 = f'{email}%'
@@ -69,9 +69,9 @@ class UserService:
         return user_list, total
     
     def get_user_by_email(
-            self, 
-            email: str
-        ) -> dict[str, Any] | None:
+        self, 
+        email: str
+    ) -> dict[str, Any] | None:
 
         stmt = select(User).filter_by(email=email)
         user = SuperService().get(stmt)
@@ -83,10 +83,10 @@ class UserService:
  
     
     def get_user_by_name(
-            self,            
-            name: str,
-            query_params: QueryParams
-        ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
+        self,            
+        name: str,
+        query_params: QueryParams
+    ) -> tuple[list[dict[str, Any]] | list[None], int | None]:
 
         # Ordenação de acordo com similaridade
         name_1 = f'{name}%'
@@ -114,38 +114,38 @@ class UserService:
         return user_list, total
 
     def add_user(
-            self, 
-            new_user: User
-        ) -> dict[str, Any]:
+        self, 
+        new_user: User
+    ) -> dict[str, Any] | None:
 
         user = SuperService().add(new_user)
 
         if user is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="New user was not subscribed, try again.")
+            return None
         
         return user.to_dict()
 
     def update_user(
-            self, 
-            id: int, 
-            user_to_update: UserEditSchema
-        ) -> dict[str, Any]:
+        self, 
+        id: int, 
+        user_to_update: UserEditSchema
+    ) -> dict[str, Any] | None:
 
-        user = SuperService().edit_by_id(id, User, user_to_update) # alter so its an dict instead of an type
+        user = SuperService().edit_by_id(id, User, user_to_update.model_dump(exclude_unset=True))
         
         if user is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+            return None
 
         return user.to_dict()
 
     def kill_yourself(
-            self, 
-            id: int
-        ) -> dict[str, Any]:
+        self, 
+        id: int
+    ) -> dict[str, Any] | None:
 
         user = SuperService().delete_by_id(id, User)
         
         if user is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+            return None
 
         return user.to_dict()
