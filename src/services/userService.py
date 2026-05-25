@@ -131,7 +131,7 @@ class UserService:
             user_to_update: UserEditSchema
         ) -> dict[str, Any]:
 
-        user = SuperService().edit_by_id(id, User, user_to_update)
+        user = SuperService().edit_by_id(id, User, user_to_update) # alter so its an dict instead of an type
         
         if user is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")

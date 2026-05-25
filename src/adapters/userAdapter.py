@@ -18,7 +18,7 @@ class UserAdapter:
 
         output = get_pagination(users, total)
     
-        output.update({'error': True})
+        output.update({'error': True}) # put in pagination later
         
         return output
 
@@ -49,7 +49,7 @@ class UserAdapter:
     
         output = get_pagination(users, total)
     
-        output.update({'error': True})
+        output.update({'error': True}) # put in pagination later
         
         return output
 
@@ -63,7 +63,7 @@ class UserAdapter:
 
         output = get_pagination(users, total)
     
-        output.update({'error': True})
+        output.update({'error': True}) # put in pagination later
         
         return output
 
@@ -88,7 +88,7 @@ class UserAdapter:
         new_user_dict = UserService().add_user(newUser)
         
         return {
-                "message" : "user added sucessfully",
+                "message": "user added sucessfully",
                 "data": new_user_dict,
                 "error": False
             }
@@ -117,7 +117,7 @@ class UserAdapter:
         user_dict = UserService().update_user(id, user_to_update)
         
         return {
-                "message" : "user edited sucessfully",
+                "message": "user edited sucessfully",
                 "data": user_dict,
                 "error": False
             }
@@ -132,7 +132,7 @@ class UserAdapter:
 
         user_dict = UserService().kill_yourself(id) 
         return {
-                "message" : "user deleted sucessfully", 
+                "message": "user deleted sucessfully", 
                 "data": user_dict,
                 "error": False
             }

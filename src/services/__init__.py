@@ -102,7 +102,7 @@ class SuperService():
             self,
             record_id: int,
             record_class: type[Model],
-            fields
+            fields # alter so its an dict instead of an type
         ):
         record = self.get_by_id(record_id, record_class)
         
